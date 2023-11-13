@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema
+        xmlns="http://www.encora.com/choice/core/ws/hotelCatalog"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.encora.com/choice/core/ws/hotelCatalog">
+    <!--     Hotel Search -->
+    <xs:element name="HotelSearchRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="page" type="xs:int"/>
+                <xs:element name="size" type="xs:int"/>
+                <xs:element name="term" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="HotelSearchResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="currentPage" type="xs:int"/>
+                <xs:element name="currentSize" type="xs:int"/>
+                <xs:element name="totalPages" type="xs:int"/>
+                <xs:element name="totalCount" type="xs:long"/>
+                <xs:element maxOccurs="unbounded" minOccurs="0" name="Hotel" type="HotelDTO"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--     Create Hotel -->
+    <xs:element name="CreateHotelRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Hotel" type="HotelDTO"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CreateHotelResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="hotelId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--     Read Hotel -->
+    <xs:element name="GetHotelRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetHotelResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Hotel" type="HotelDTO"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--     Update Hotel -->
+    <xs:element name="UpdateHotelRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Hotel" type="HotelDTO"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--     Delete Hotel -->
+    <xs:element name="DeleteHotelRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--     Amenities -->
+    <xs:element name="AddAmenityRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="hotelId" type="xs:long"/>
+                <xs:element name="amenityId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="RemoveAmenityRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="hotelId" type="xs:long"/>
+                <xs:element name="amenityId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--     Common Types -->
+    <xs:complexType name="AmenityDTO">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
+            <xs:element name="name" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="HotelDTO">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="address" type="xs:string"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="Amenity" type="AmenityDTO"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
