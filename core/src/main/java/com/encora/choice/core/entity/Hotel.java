@@ -10,7 +10,7 @@ import java.util.Set;
 public class Hotel {
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
     private String name;
     private String address;
     private byte rating;
