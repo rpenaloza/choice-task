@@ -8,6 +8,6 @@ import lombok.Data;
 @Entity
 public class Amenity {
     @Id
-    private int id;
+    private long id;
     private String name;
 }

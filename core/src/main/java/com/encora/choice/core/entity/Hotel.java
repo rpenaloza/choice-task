@@ -3,7 +3,6 @@ package com.encora.choice.core.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -11,7 +10,7 @@ import java.util.Set;
 public class Hotel {
     @Id
     @GeneratedValue
-    private int id;
+    private long id;
     private String name;
     private String address;
     private byte rating;
