@@ -1,4 +1,4 @@
-package com.encora.choice;
+package com.encora.choice.webapp;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
