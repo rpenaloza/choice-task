@@ -8,8 +8,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.config.annotation.EnableWs;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
 import org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition;
-import org.springframework.xml.xsd.XsdSchema;
 import org.springframework.xml.xsd.SimpleXsdSchema;
+import org.springframework.xml.xsd.XsdSchema;
 
 @EnableWs
 @Configuration
@@ -23,10 +23,11 @@ public class WSConfig {
         return new ServletRegistrationBean<>(servlet, "/ws/*");
     }
 
+
     @Bean(name = "hotelCatalog")
     public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema schema) {
         DefaultWsdl11Definition defaultWsdl11Definition = new DefaultWsdl11Definition();
-        defaultWsdl11Definition.setPortTypeName("HotelCatalog");
+        defaultWsdl11Definition.setPortTypeName("HotelCatalogPort");
         defaultWsdl11Definition.setLocationUri("/ws");
         defaultWsdl11Definition.setTargetNamespace("http://www.encora.com/choice/core/ws/hotelCatalog");
         defaultWsdl11Definition.setSchema(schema);

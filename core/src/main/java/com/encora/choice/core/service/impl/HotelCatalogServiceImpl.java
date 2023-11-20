@@ -15,6 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 @Slf4j
 @Service
 public class HotelCatalogServiceImpl implements HotelCatalogService {
@@ -48,7 +50,7 @@ public class HotelCatalogServiceImpl implements HotelCatalogService {
     @Override
     public GetHotelResponse getHotel(GetHotelRequest request) {
         log.info("obtaining hotel with id {}", request.getId());
-        Hotel entity = hotelDAO.findById(request.getId()).orElseThrow(IllegalArgumentException::new);
+        Hotel entity = hotelDAO.findById(request.getId()).orElseThrow(NoSuchElementException::new);
         log.info("successfully obtained hotel with id {}", entity.getId());
         GetHotelResponse response = new GetHotelResponse();
         response.setHotel(hotelParser.parseToDTO(entity));
@@ -59,7 +61,7 @@ public class HotelCatalogServiceImpl implements HotelCatalogService {
     public void updateHotel(UpdateHotelRequest request) {
         log.info("updating hotel with id {}", request.getHotel().getId());
         Hotel newHotel = hotelParser.parseToEntity(request.getHotel());
-        Hotel originalHotel = hotelDAO.findById(request.getHotel().getId()).orElseThrow(IllegalArgumentException::new);
+        Hotel originalHotel = hotelDAO.findById(request.getHotel().getId()).orElseThrow(NoSuchElementException::new);
         log.info("Successfully obtained hotel with id {}, proceeding to merge properties ", originalHotel.getId());
         //TODO verify amenities are copied
         BeanUtils.copyProperties(newHotel, originalHotel);

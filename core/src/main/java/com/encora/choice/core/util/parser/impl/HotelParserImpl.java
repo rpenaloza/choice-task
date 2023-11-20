@@ -32,6 +32,9 @@ public class HotelParserImpl implements HotelParser {
     @Override
     public Hotel parseToEntity(HotelDTO dto) {
         Hotel result =  mapper.map(dto,Hotel.class);
+        if (dto.getId() == 0) {
+            result.setId(null);
+        }
         result.setAmenities(amenityParser.parseToEntitySet(dto.getAmenity()));
         return result;
     }
