@@ -83,6 +83,13 @@
             <version>1.2.3</version>
             <scope>compile</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>3.1.1</version>
+        </dependency>
+
     </dependencies>
     <build>
         <finalName>SpringRestJwt</finalName>
@@ -104,6 +111,27 @@
                     <configuration>
                         <warSourceDirectory>src/main/webapp</warSourceDirectory>
                         <warName>choiceRest</warName>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>jaxws-maven-plugin</artifactId>
+                    <version>2.6</version>
+                    <executions>
+                        <execution>
+                            <id>wsimport-from-jdk</id>
+                            <goals>
+                                <goal>wsimport</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <wsdlUrls>
+                            <wsdlUrl>http://localhost:8080/ws/hotelCatalog.wsdl</wsdlUrl>
+                        </wsdlUrls>
+                        <keep>true</keep>
+                        <packageName>com.encora.choice.webapp.ws.client</packageName>
+                        <sourceDestDir>src/main/java</sourceDestDir>
                     </configuration>
                 </plugin>
             </plugins>

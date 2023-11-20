@@ -1,4 +1,4 @@
-package com.encora.choice.webapp.controller.service;
+package com.encora.choice.webapp.service;
 
 import com.encora.choice.webapp.vo.Hotel;
 import com.encora.choice.webapp.vo.SearchPage;
