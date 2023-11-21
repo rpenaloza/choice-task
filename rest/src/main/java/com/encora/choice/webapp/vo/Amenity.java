@@ -1,12 +1,13 @@
 package com.encora.choice.webapp.vo;
 
-import lombok.NonNull;
 
-import javax.validation.constraints.Min;
+import lombok.Data;
 
+import javax.validation.constraints.*;
+@Data
 public class Amenity {
     @Min(1)
-    @NonNull
+    @NotNull
     private Long id;
     private String name;
 }

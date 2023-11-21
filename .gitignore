@@ -45,3 +45,7 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+core/src/main/java/META-INF/JAXB/
+
+core/mvnw.cmd

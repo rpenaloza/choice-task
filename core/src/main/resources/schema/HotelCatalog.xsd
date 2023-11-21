@@ -100,4 +100,5 @@
             <xs:element maxOccurs="unbounded" minOccurs="0" name="Amenity" type="AmenityDTO"/>
         </xs:sequence>
     </xs:complexType>
+
 </xs:schema>

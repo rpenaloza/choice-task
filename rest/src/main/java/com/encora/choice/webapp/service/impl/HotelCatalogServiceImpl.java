@@ -7,10 +7,11 @@ import com.encora.choice.webapp.vo.SearchPage;
 import com.encora.choice.webapp.ws.client.GetHotelResponse;
 import com.encora.choice.webapp.ws.client.HotelCatalogPort;
 import com.encora.choice.webapp.ws.client.HotelSearchResponse;
+import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-@Slf4j
+@Log4j
 @Service
 public class HotelCatalogServiceImpl implements HotelCatalogService {
 
@@ -30,6 +31,7 @@ public class HotelCatalogServiceImpl implements HotelCatalogService {
 
     @Override
     public long createHotel(Hotel hotel) {
+        if (hotel.getId()!=null) throw new IllegalArgumentException("Hotel id must be null for creation");
         log.info("Performing soap request for createHotel");
         wsClient.createHotel(parser.parseToCreateHotelRequest(hotel));
         return 0;
@@ -37,6 +39,7 @@ public class HotelCatalogServiceImpl implements HotelCatalogService {
 
     @Override
     public void updateHotel(Hotel hotel) {
+        if (hotel.getId()==null) throw new IllegalArgumentException("Hotel id can't be null for update");
         log.info("Performing soap request to updateHotel");
         wsClient.updateHotel(parser.parseToUpdateHotelRequest(hotel));
     }
