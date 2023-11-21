@@ -22,6 +22,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}long"/&gt;
  *         &lt;element name="name" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *         &lt;element name="address" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="rating" type="{http://www.w3.org/2001/XMLSchema}byte"/&gt;
  *         &lt;element name="Amenity" type="{http://www.encora.com/choice/core/ws/hotelCatalog}AmenityDTO" maxOccurs="unbounded" minOccurs="0"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
@@ -36,6 +37,7 @@ import javax.xml.bind.annotation.XmlType;
     "id",
     "name",
     "address",
+    "rating",
     "amenity"
 })
 public class HotelDTO {
@@ -45,6 +47,7 @@ public class HotelDTO {
     protected String name;
     @XmlElement(required = true)
     protected String address;
+    protected byte rating;
     @XmlElement(name = "Amenity")
     protected List<AmenityDTO> amenity;
 
@@ -110,6 +113,22 @@ public class HotelDTO {
      */
     public void setAddress(String value) {
         this.address = value;
+    }
+
+    /**
+     * Gets the value of the rating property.
+     * 
+     */
+    public byte getRating() {
+        return rating;
+    }
+
+    /**
+     * Sets the value of the rating property.
+     * 
+     */
+    public void setRating(byte value) {
+        this.rating = value;
     }
 
     /**

@@ -4,6 +4,7 @@ import com.encora.choice.webapp.service.HotelCatalogService;
 import com.encora.choice.webapp.util.parser.HotelParser;
 import com.encora.choice.webapp.vo.Hotel;
 import com.encora.choice.webapp.vo.SearchPage;
+import com.encora.choice.webapp.ws.client.CreateHotelResponse;
 import com.encora.choice.webapp.ws.client.GetHotelResponse;
 import com.encora.choice.webapp.ws.client.HotelCatalogPort;
 import com.encora.choice.webapp.ws.client.HotelSearchResponse;
@@ -35,8 +36,9 @@ public class HotelCatalogServiceImpl implements HotelCatalogService {
     public long createHotel(Hotel hotel) {
         if (hotel.getId()!=null) throw new IllegalArgumentException("Hotel id must be null for creation");
         log.info("Performing soap request for createHotel");
-        wsClient.createHotel(parser.parseToCreateHotelRequest(hotel));
-        return 0;
+        CreateHotelResponse res = wsClient.createHotel(parser.parseToCreateHotelRequest(hotel));
+        log.info("Successfully created hotel with id "+res.getHotelId());
+        return res.getHotelId();
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.encora.choice.webapp.vo.Hotel;
 import com.encora.choice.webapp.vo.SearchPage;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,9 +39,9 @@ public class HotelCatalogController {
         log.info("default from properties "+ defaultPageSize);
     }
     @GetMapping
-    public SearchPage searchPage(@RequestParam @Min(0) Integer page, @RequestParam @Min(1) Integer size, @RequestParam @Size(min = 3) @Pattern(regexp = "/^[\\w\\-\\s]+$/") String searchTerm) {
+    public SearchPage searchPage(@RequestParam @Min(0) @Nullable Integer page, @RequestParam @Min(1)  @Nullable Integer size, @RequestParam @Size(min = 3) @Pattern(regexp = "^\\s*[\\da-zA-Z][\\da-zA-Z\\s]*$") @Nullable String searchTerm) {
         log.info("Performing search request for page:" + page + " size:" + size + " and term:" + searchTerm);
-        return service.searchHotel(Optional.of(page).orElse(0), Optional.of(size).orElse(defaultPageSize), searchTerm);
+        return service.searchHotel(Optional.ofNullable(page).orElse(0), Optional.ofNullable(size).orElse(defaultPageSize), searchTerm);
     }
 
     @GetMapping("/{id}")

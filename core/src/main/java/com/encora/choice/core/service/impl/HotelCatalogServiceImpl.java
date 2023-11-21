@@ -14,6 +14,7 @@ import com.encora.choice.core.ws.hotelcatalog.*;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -44,11 +45,21 @@ public class HotelCatalogServiceImpl implements HotelCatalogService {
     public CreateHotelResponse createHotel(CreateHotelRequest request) {
         log.info("creating a new hotel");
         Hotel entity = hotelParser.parseToEntity(request.getHotel());
-        long id = hotelDAO.save(entity).getId();
-        log.info("successfully created hotel with id {}", id);
-        CreateHotelResponse response = new CreateHotelResponse();
-        response.setHotelId(id);
-        return response;
+        try {
+            long id = hotelDAO.save(entity).getId();
+            log.info("successfully created hotel with id {}", id);
+            CreateHotelResponse response = new CreateHotelResponse();
+            response.setHotelId(id);
+            return response;
+
+        } catch (Exception e) {
+            log.error("caught " +e.getClass().getCanonicalName());
+            if (e instanceof DataIntegrityViolationException) {
+                log.error("one of the amenities is not existent");
+                throw new NoSuchAmenityException(e);
+            }
+            throw e;
+        }
     }
 
     @Override
@@ -68,7 +79,7 @@ public class HotelCatalogServiceImpl implements HotelCatalogService {
         Hotel originalHotel = hotelDAO.findById(request.getHotel().getId()).orElseThrow(NoSuchHotelException::new);
         log.info("Successfully obtained hotel with id {}, proceeding to merge properties ", originalHotel.getId());
         //TODO verify amenities are copied
-        mapper.map(newHotel,originalHotel);
+        mapper.map(newHotel, originalHotel);
         hotelDAO.save(originalHotel);
         log.info("Successfully update hotel with id {}", originalHotel.getId());
     }
@@ -76,6 +87,7 @@ public class HotelCatalogServiceImpl implements HotelCatalogService {
     @Override
     public void deleteHotel(DeleteHotelRequest request) {
         log.info("deleting hotel with id {}", request.getId());
+        hotelDAO.findById(request.getId()).orElseThrow(NoSuchHotelException::new);
         hotelDAO.deleteById(request.getId());
         log.info("successfully deleted hotel with id {}", request.getId());
     }
@@ -87,9 +99,9 @@ public class HotelCatalogServiceImpl implements HotelCatalogService {
         PageRequest pageRequest = PageRequest.of(request.getPage(), request.getSize());
         if (request.getTerm() != null && !request.getTerm().isEmpty()) {
             String term = stringUtils.getSearchTerm(request.getTerm());
-            log.info("searching by term {}",term);
+            log.info("searching by term {}", term);
             page = hotelPaginationDAO.findAllByNameLikeIgnoreCase(term, pageRequest);
-            log.info("found {} hotels by search term",page.getContent().size());
+            log.info("found {} hotels by search term", page.getContent().size());
         } else {
             log.info("searching hotels without term");
             page = hotelPaginationDAO.findAll(pageRequest);
@@ -106,7 +118,7 @@ public class HotelCatalogServiceImpl implements HotelCatalogService {
 
     @Override
     public void addAmenity(AddAmenityRequest request) {
-        log.info("Processing request to add amenity with id {} to hotel with id {}", request.getAmenityId(),request.getHotelId());
+        log.info("Processing request to add amenity with id {} to hotel with id {}", request.getAmenityId(), request.getHotelId());
         Amenity amenity = amenityDAO.findById(request.getAmenityId()).orElseThrow(NoSuchAmenityException::new);
         Hotel hotel = hotelDAO.findById(request.getHotelId()).orElseThrow(NoSuchHotelException::new);
         hotel.getAmenities().add(amenity);
@@ -116,7 +128,7 @@ public class HotelCatalogServiceImpl implements HotelCatalogService {
 
     @Override
     public void removeAmenity(RemoveAmenityRequest request) {
-        log.info("Processing request to add remove with id {} to hotel with id {}", request.getAmenityId(),request.getHotelId());
+        log.info("Processing request to add remove with id {} to hotel with id {}", request.getAmenityId(), request.getHotelId());
         Amenity amenity = amenityDAO.findById(request.getAmenityId()).orElseThrow(NoSuchAmenityException::new);
         Hotel hotel = hotelDAO.findById(request.getHotelId()).orElseThrow(NoSuchHotelException::new);
         hotel.getAmenities().remove(amenity);

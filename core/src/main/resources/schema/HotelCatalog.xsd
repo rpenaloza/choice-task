@@ -97,6 +97,7 @@
             <xs:element name="id" type="xs:long"/>
             <xs:element name="name" type="xs:string"/>
             <xs:element name="address" type="xs:string"/>
+            <xs:element name="rating" type="xs:byte"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="Amenity" type="AmenityDTO"/>
         </xs:sequence>
     </xs:complexType>

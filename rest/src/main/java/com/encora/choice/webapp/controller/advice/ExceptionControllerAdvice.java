@@ -5,6 +5,7 @@ import com.sun.xml.internal.ws.fault.ServerSOAPFaultException;
 import lombok.extern.log4j.Log4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -36,17 +37,26 @@ public class ExceptionControllerAdvice {
         return new ResponseEntity<>(errorMessage,HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-//    @ExceptionHandler(ValidationException.class)
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorMessage> handleValidationException(Exception e){
+    public ResponseEntity<ErrorMessage> handleValidationException(ConstraintViolationException e){
+        log.error("ConstraintViolationException handler ",e);
+        ErrorMessage errorMessage = new ErrorMessage(HttpStatus.BAD_REQUEST.value(), LocalDateTime.now() ,e.getMessage(),e.getLocalizedMessage());
+        return new ResponseEntity<>(errorMessage,HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorMessage> handleValidationException(MethodArgumentNotValidException e){
+        log.error("MethodArgumentNotValidException handler ",e);
         ErrorMessage errorMessage = new ErrorMessage(HttpStatus.BAD_REQUEST.value(), LocalDateTime.now() ,e.getMessage(),e.getLocalizedMessage());
         return new ResponseEntity<>(errorMessage,HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NoSuchElementException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public ResponseEntity<ErrorMessage> handleNoSuchElementException(Exception e){
+    public ResponseEntity<ErrorMessage> handleNoSuchElementException(NoSuchElementException e){
+        log.error("NoSuchElementException handler ",e);
         ErrorMessage errorMessage = new ErrorMessage(HttpStatus.NOT_FOUND.value(), LocalDateTime.now() ,e.getMessage(),e.getLocalizedMessage());
         return new ResponseEntity<>(errorMessage,HttpStatus.NOT_FOUND);
     }
@@ -54,6 +64,7 @@ public class ExceptionControllerAdvice {
 
     @ExceptionHandler(ServerSOAPFaultException.class)
     public ResponseEntity<ErrorMessage> handleServerSOAPFaultException(ServerSOAPFaultException e){
+        log.error("ServerSOAPFaultException handler ",e);
         HttpStatus status = getStatusForFault(e);
         ErrorMessage errorMessage = new ErrorMessage(status.value(), LocalDateTime.now(), e.getMessage(), e.getLocalizedMessage());
         return new ResponseEntity<>(errorMessage, status);

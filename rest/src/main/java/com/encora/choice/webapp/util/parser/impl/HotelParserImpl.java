@@ -8,7 +8,9 @@ import com.encora.choice.webapp.ws.client.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -119,6 +121,10 @@ public class HotelParserImpl implements HotelParser {
     }
 
     private List<AmenityDTO> parseToAmenityDTOList(Set<Amenity> vos){
-        return vos.stream().map(this::parseToAmenityDTO).collect(Collectors.toList());
+        if (Optional.ofNullable(vos).isPresent()) {
+            return vos.stream().map(this::parseToAmenityDTO).collect(Collectors.toList());
+        }else{
+            return new ArrayList<>();
+        }
     }
 }

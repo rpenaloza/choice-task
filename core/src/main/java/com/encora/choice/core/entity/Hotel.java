@@ -1,6 +1,5 @@
 package com.encora.choice.core.entity;
 
-import com.encora.choice.core.entity.Amenity;
 import lombok.Data;
 
 import javax.persistence.*;
