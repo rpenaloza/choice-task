@@ -5,13 +5,13 @@
         xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
         xmlns:pro="http://www.liquibase.org/xml/ns/pro"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd
         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
         http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
 
     <changeSet  id="1"  author="rpenaloza">
         <createTable  tableName="hotel">
-            <column  name="id"  type="int"  >
+            <column  name="id"  type="int" autoIncrement="true" >
                 <constraints  primaryKey="true" />
             </column>
             <column  name="name"  type="varchar(70)" >

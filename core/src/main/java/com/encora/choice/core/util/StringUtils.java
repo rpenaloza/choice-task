@@ -6,6 +6,6 @@ import org.springframework.stereotype.Component;
 public class StringUtils {
 
     public String getSearchTerm(String term){
-        return "%"+term.trim().replaceAll("//s+","%")+"%";
+        return "%"+term.trim().replaceAll("\\s+","%")+"%";
     }
 }
