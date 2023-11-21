@@ -2,29 +2,31 @@ package com.encora.choice.webapp.controller.advice;
 
 import com.encora.choice.webapp.vo.ErrorMessage;
 import com.sun.xml.internal.ws.fault.ServerSOAPFaultException;
-import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-//import javax.validation.ValidationException;
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+/**
+ * Exception mapping strategy
+ */
 @Log4j
 @ControllerAdvice
 public class ExceptionControllerAdvice {
 
-    @Value("${soap.client.faultMapping}")
-    private Map<String,Integer> faulCodeMapping;
+
+    private final Map<String, HttpStatus> faultCodeMap;
+
+    public ExceptionControllerAdvice(Map<String, HttpStatus> faultCodeMap) {
+        this.faultCodeMap = faultCodeMap;
+    }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
@@ -52,12 +54,14 @@ public class ExceptionControllerAdvice {
 
     @ExceptionHandler(ServerSOAPFaultException.class)
     public ResponseEntity<ErrorMessage> handleServerSOAPFaultException(ServerSOAPFaultException e){
+        HttpStatus status = getStatusForFault(e);
+        ErrorMessage errorMessage = new ErrorMessage(status.value(), LocalDateTime.now(), e.getMessage(), e.getLocalizedMessage());
+        return new ResponseEntity<>(errorMessage, status);
+    }
+
+    private HttpStatus getStatusForFault(ServerSOAPFaultException e) {
         String faultCode = e.getFault().getFaultCode().split(":")[1];
-        //TODO add soap fault constants to properties
-        //TODO map fault constants to status
-        log.info("faulCodeMapping.getOrDefault(faultCode,500) "+faulCodeMapping.getOrDefault(faultCode,500));
-        ErrorMessage errorMessage = new ErrorMessage(faulCodeMapping.getOrDefault(faultCode,500), LocalDateTime.now() ,e.getMessage(),e.getLocalizedMessage());
-        return new ResponseEntity<>(errorMessage,HttpStatus.NOT_FOUND);
+        return faultCodeMap.getOrDefault(faultCode, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 

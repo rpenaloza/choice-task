@@ -8,9 +8,11 @@ import com.encora.choice.webapp.ws.client.GetHotelResponse;
 import com.encora.choice.webapp.ws.client.HotelCatalogPort;
 import com.encora.choice.webapp.ws.client.HotelSearchResponse;
 import lombok.extern.log4j.Log4j;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+/**
+ * Business Logic and validations for hotel catalog
+ */
 @Log4j
 @Service
 public class HotelCatalogServiceImpl implements HotelCatalogService {

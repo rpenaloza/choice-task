@@ -12,6 +12,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
+/**
+ * Configure WebMVC components and Validator
+ */
 @EnableWebMvc
 @Configuration
 @ComponentScan("com.encora.choice.webapp")

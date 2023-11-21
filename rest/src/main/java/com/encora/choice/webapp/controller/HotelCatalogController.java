@@ -13,8 +13,10 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.util.Optional;
 
+/**
+ * Controller to expose Hotel Catalog Operations
+ */
 @Log4j
-//@Slf4j
 @Validated
 @RestController
 @RequestMapping("/hotel")

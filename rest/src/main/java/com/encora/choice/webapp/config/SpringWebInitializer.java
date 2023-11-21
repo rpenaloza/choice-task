@@ -2,6 +2,9 @@ package com.encora.choice.webapp.config;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+/**
+ * Class to configure servlet
+ */
 public class SpringWebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     @Override
