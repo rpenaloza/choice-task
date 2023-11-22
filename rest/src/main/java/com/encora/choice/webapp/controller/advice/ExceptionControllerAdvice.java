@@ -1,7 +1,6 @@
 package com.encora.choice.webapp.controller.advice;
 
 import com.encora.choice.webapp.vo.ErrorMessage;
-import com.sun.xml.internal.ws.fault.ServerSOAPFaultException;
 import lombok.extern.log4j.Log4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.validation.ConstraintViolationException;
+import javax.xml.ws.WebServiceException;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -32,6 +32,7 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ErrorMessage> handleException(Exception e){
+        log.error("Caught unmapped exception of type "+ e.getClass().getCanonicalName());
         log.error("general exception handler",e);
         ErrorMessage errorMessage = new ErrorMessage(HttpStatus.INTERNAL_SERVER_ERROR.value(), LocalDateTime.now(), e.getMessage(), e.getLocalizedMessage());
         return new ResponseEntity<>(errorMessage,HttpStatus.INTERNAL_SERVER_ERROR);
@@ -62,18 +63,22 @@ public class ExceptionControllerAdvice {
     }
 
 
-    @ExceptionHandler(ServerSOAPFaultException.class)
-    public ResponseEntity<ErrorMessage> handleServerSOAPFaultException(ServerSOAPFaultException e){
-        log.error("ServerSOAPFaultException handler ",e);
+    @ExceptionHandler(WebServiceException.class)
+    public ResponseEntity<ErrorMessage> handleServerSOAPFaultException(WebServiceException e){
+        log.error(e.getCause());
+        log.error(e.getMessage());
+        log.error(e.getLocalizedMessage());
+        log.error("WebServiceException handler ",e);
         HttpStatus status = getStatusForFault(e);
         ErrorMessage errorMessage = new ErrorMessage(status.value(), LocalDateTime.now(), e.getMessage(), e.getLocalizedMessage());
         return new ResponseEntity<>(errorMessage, status);
     }
 
-    private HttpStatus getStatusForFault(ServerSOAPFaultException e) {
-        String faultCode = e.getFault().getFaultCode().split(":")[1];
+    private HttpStatus getStatusForFault(WebServiceException e) {
+        String message = e.getMessage();
+        String faultCode = faultCodeMap.keySet().stream().filter(k->message.contains(k)).findFirst().orElse("DEFAULT");
+        log.info("mapping exception for fault code "+faultCode);
         return faultCodeMap.getOrDefault(faultCode, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
 
 }
