@@ -1,7 +1,7 @@
 package com.encora.choice.webapp.controller.advice;
 
 import com.encora.choice.webapp.vo.ErrorMessage;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -18,7 +18,7 @@ import java.util.NoSuchElementException;
 /**
  * Exception mapping strategy
  */
-@Log4j
+@Log4j2
 @ControllerAdvice
 public class ExceptionControllerAdvice {
 
@@ -48,7 +48,7 @@ public class ExceptionControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorMessage> handleValidationException(MethodArgumentNotValidException e){
+    public ResponseEntity<ErrorMessage> handleMethodArgumentException(MethodArgumentNotValidException e){
         log.error("MethodArgumentNotValidException handler ",e);
         ErrorMessage errorMessage = new ErrorMessage(HttpStatus.BAD_REQUEST.value(), LocalDateTime.now() ,e.getMessage(),e.getLocalizedMessage());
         return new ResponseEntity<>(errorMessage,HttpStatus.BAD_REQUEST);
@@ -64,7 +64,7 @@ public class ExceptionControllerAdvice {
 
 
     @ExceptionHandler(WebServiceException.class)
-    public ResponseEntity<ErrorMessage> handleServerSOAPFaultException(WebServiceException e){
+    public ResponseEntity<ErrorMessage> handleWebServiceException(WebServiceException e){
         log.error(e.getCause());
         log.error(e.getMessage());
         log.error(e.getLocalizedMessage());
@@ -76,7 +76,7 @@ public class ExceptionControllerAdvice {
 
     private HttpStatus getStatusForFault(WebServiceException e) {
         String message = e.getMessage();
-        String faultCode = faultCodeMap.keySet().stream().filter(k->message.contains(k)).findFirst().orElse("DEFAULT");
+        String faultCode = faultCodeMap.keySet().stream().filter(message::contains).findFirst().orElse("DEFAULT");
         log.info("mapping exception for fault code "+faultCode);
         return faultCodeMap.getOrDefault(faultCode, HttpStatus.INTERNAL_SERVER_ERROR);
     }

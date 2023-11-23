@@ -3,21 +3,23 @@ package com.encora.choice.webapp.controller;
 import com.encora.choice.webapp.service.HotelCatalogService;
 import com.encora.choice.webapp.vo.Hotel;
 import com.encora.choice.webapp.vo.SearchPage;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.Optional;
 
 /**
  * Controller to expose Hotel Catalog Operations
  */
-@Log4j
+@Log4j2
 @Validated
 @RestController
 @RequestMapping("/hotel")
@@ -34,10 +36,6 @@ public class HotelCatalogController {
     }
 
 
-    @PostConstruct
-    public void init(){
-        log.info("default from properties "+ defaultPageSize);
-    }
     @GetMapping
     public SearchPage searchPage(@RequestParam @Min(0) @Nullable Integer page, @RequestParam @Min(1)  @Nullable Integer size, @RequestParam @Size(min = 3) @Pattern(regexp = "^\\s*[\\da-zA-Z][\\da-zA-Z\\s]*$") @Nullable String searchTerm) {
         log.info("Performing search request for page:" + page + " size:" + size + " and term:" + searchTerm);
@@ -47,8 +45,7 @@ public class HotelCatalogController {
     @GetMapping("/{id}")
     public Hotel getHotel(@PathVariable @Min(1) long id) {
         System.out.println("Performing get request for hotel with id:" + id);
-       log.info(
-               "Performing get request for hotel with id:" + id);
+        log.info("Performing get request for hotel with id:" + id);
         return service.getHotel(id);
     }
 
