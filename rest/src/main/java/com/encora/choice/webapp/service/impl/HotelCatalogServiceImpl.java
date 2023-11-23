@@ -29,7 +29,8 @@ public class HotelCatalogServiceImpl implements HotelCatalogService {
     public Hotel getHotel(long id) {
         log.info("Performing soap request for getHotel");
         GetHotelResponse hotel = wsClient.getHotel(parser.parseToHotelRequest(id));
-        return parser.parsToHotelVO(hotel);
+        Hotel hotel1 = parser.parseToHotelVO(hotel);
+        return hotel1;
     }
 
     @Override

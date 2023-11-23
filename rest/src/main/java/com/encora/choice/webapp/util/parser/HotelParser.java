@@ -15,7 +15,7 @@ public interface HotelParser {
 
     HotelSearchRequest parseToHotelSearchRequest(int page, int size, String term);
 
-    Hotel parsToHotelVO(GetHotelResponse hotel);
+    Hotel parseToHotelVO(GetHotelResponse hotel);
 
     SearchPage parseToSearchPage(HotelSearchResponse res);
 

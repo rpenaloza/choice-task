@@ -61,7 +61,7 @@ public class HotelParserImpl implements HotelParser {
     }
 
     @Override
-    public Hotel parsToHotelVO(GetHotelResponse dto) {
+    public Hotel parseToHotelVO(GetHotelResponse dto) {
         return parseToHotelVO(dto.getHotel());
     }
 
